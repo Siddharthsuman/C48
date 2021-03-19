@@ -126,7 +126,7 @@ ARBackground4Img=loadImage("ARBACK/Forest2.png");
 ARBackground5Img=loadImage("ARBACK/End.png")
 
 ABSTImg=loadImage("OST/ABBISE.png");
-LUSTImg=loadImage("OST/LUCANSE.png");
+LUSTImg=loadImage("OST/LucanSE.png");
 ARSTImg=loadImage("OST/ARSE.png");
    
 Next1Img=loadImage("Buttons/Next.png");
