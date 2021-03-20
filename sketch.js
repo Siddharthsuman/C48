@@ -69,7 +69,10 @@ var TAT,TYT,Talk1,Talk2,Talk3,Talk4,Talk5;
 var TygrenA,ThalleousDie;
 var Gameover,GameOverImg1,GameOverImg2,GameOverImg3;
 var Restart1,Restart2,Restart3,RestartImg;
-
+var ABGuide,ARGuide,NEGuide;
+var ABG1,ABG2,ABG3,ARG1,ARG2,ARG3,ARG4,NEG1,NEG2,NEG3;
+var EnergyBall,EnergyBallAnim,EnergyBallGroup;
+var TBCS,CreeperS,JumpS;
 function preload(){
   start1Img=loadImage("Story/S1.jpg")
   start2Img=loadImage("Story/S2.jpg")
@@ -126,7 +129,7 @@ ARBackground4Img=loadImage("ARBACK/Forest2.png");
 ARBackground5Img=loadImage("ARBACK/End.png")
 
 ABSTImg=loadImage("OST/ABBISE.png");
-LUSTImg=loadImage("OST/LucanSE.png");
+LUSTImg=loadImage("OST/LUCANSE.png");
 ARSTImg=loadImage("OST/ARSE.png");
    
 Next1Img=loadImage("Buttons/Next.png");
@@ -204,6 +207,28 @@ RestartImg=loadImage("Background/Restart.png");
 GameOverImg1=loadImage("GAMEOVER/ABGO2.png");
 GameOverImg2=loadImage("GAMEOVER/ARGO2.png");
 GameOverImg3=loadImage("GAMEOVER/NEGO2.png");
+
+ABG1=loadImage("GUIDE/ABG1.png");
+ABG2=loadImage("GUIDE/ABG2.png");
+ABG3=loadImage("GUIDE/ABG3.png");
+
+ARG1=loadImage("GUIDE/ARG1.png");
+ARG2=loadImage("GUIDE/ARG2.png");
+ARG3=loadImage("GUIDE/ARG3.png");
+ARG4=loadImage("GUIDE/ARG4.png");
+
+NEG1=loadImage("GUIDE/NEG1.png");
+NEG2=loadImage("GUIDE/NEG2.png");
+NEG3=loadImage("GUIDE/NEG3.png");
+
+EnergyBallAnim=loadAnimation("AREND/TEB1.png","AREND/TEB2.png","AREND/TEB3.png","AREND/TEB4.png","AREND/TEB5.png","AREND/TEB6.png","AREND/TEB7.png","AREND/TEB8.png","AREND/TEB9.png","AREND/TEB10.png","AREND/TEB11.png")
+TBCS=loadSound("Sound/TEB.mp3");
+
+CreeperS=loadSound("Sound/CreeperS.mp3");
+
+JumpS=loadSound("Sound/Jump.mp3");
+
+
 }
 
 
@@ -380,8 +405,7 @@ Tygren.scale=0.35;
 Tygren.visible=false;
 
 
-Rock=createSprite(1200,470,400,450)
-Rock.shapeColor="Brown"
+Rock=createSprite(1200,470,400,450);
 Rock.addImage(DirtTex);
 Rock.visible=false;
 
@@ -470,6 +494,21 @@ Restart3.visible=false;
 Gameover=createSprite(680,360,1,1)
 Gameover.visible=false;
 
+//GUIDE
+ABGuide=createSprite(600,100,10,10);
+ABGuide.addImage(ABG1);
+ABGuide.scale=0.5;
+ABGuide.visible=false;
+
+ARGuide=createSprite(600,100,10,10);
+ARGuide.addImage(ARG1);
+ARGuide.scale=0.5;
+ARGuide.visible=false;
+
+NEGuide=createSprite(600,100,10,10);
+NEGuide.addImage(NEG1);
+NEGuide.scale=0.5;
+NEGuide.visible=false;
 
 
 // Result
@@ -605,6 +644,8 @@ Voltaris1Group= new Group();
 Voltaris2Group= new Group();
 ArrowGroup= new Group();
 CreeperGroup=new Group();
+EnergyBallGroup= new Group();
+
 }
 
 function draw() {
@@ -838,17 +879,22 @@ if(gameState===BEGIN){
 if(gameState===DRAGON){
   Abbigail.visible=true;
   Ground.visible=true;
- 
+ ABGuide.visible=true;
+ ABBackground1.depth = ABBackground1.depth;
+ ABGuide.depth = ABBackground1.depth + 1;
   Gameover.visible=false;
   Restart1.visible=false;
   ABST.visible=false;
-  text("Score: "+ score, 1200,30);
+  text("Score: "+ score, 1150,30);
  ABBackground1.depth = ABBackground1.depth;
   Abbigail.depth = ABBackground1.depth + 1;
   ABBackground1.depth = ABBackground1.depth;
   Ground.depth = ABBackground1.depth + 1;
   ABBackground1.velocityX=-2;
   ABBackground1.visible=true;
+  if(score>100){
+    ABGuide.visible=false;
+  }
   GrimFun();
   JalkarFun();
   if(keyDown("p")|| keyDown("P")){
@@ -862,7 +908,10 @@ if(gameState===DRAGON){
   }
 
 
-
+if(score>450 && score<530){
+  JalkarGroup.destroyEach();
+  GrimGroup.destroyEach();
+}
 
   
   if(Abbigail.isTouching(Bow)){
@@ -876,6 +925,7 @@ if(gameState===DRAGON){
   Abbigail.velocityY = -15;
   Abbigail.changeAnimation("AJ",AbbigailJ);
   Abbigail.scale=0.6;
+  JumpS.play();
 }
 if(Abbigail.isTouching(Ground)){
   Abbigail.changeAnimation("ABRun",AbbigailRun)
@@ -886,11 +936,19 @@ if(Abbigail.isTouching(Ground)){
    Ground.visible=true;
    score = score + Math.round(getFrameRate()/60);
   
+if(ArrowGroup.isTouching(JalkarGroup)){
+  JalkarGroup.destroyEach();
+}
+
    if(score>560){
+     ABGuide.visible=true;
+     ABGuide.addImage(ABG2);
     ABBackground1.visible=false;
     ABBackground2.visible=true;
     ABBackground2.depth = ABBackground2.depth;
     Abbigail.depth = ABBackground2.depth + 1;
+    ABBackground2.depth = ABBackground2.depth;
+    ABGuide.depth = ABBackground2.depth + 1;
     ABBackground2.depth = ABBackground2.depth;
     Ground.depth = ABBackground2.depth + 1;
     ABBackground2.velocityX=-2;
@@ -898,7 +956,10 @@ if(Abbigail.isTouching(Ground)){
     if(ABBackground2.x<600){
       ABBackground2.x=ABBackground2.width/2;
     }
- 
+  }
+
+  if(score>620){
+    ABGuide.visible=false;
   }
   if(score>960){
     ABBackground2.visible=false;
@@ -958,6 +1019,10 @@ if(gameState===BOSSF1){
   if(mousePressedOver(Restart1)){
     Restart1Fun();
   }
+  ABGuide.visible=true;
+  ABGuide.addImage(ABG3);
+  ABBackground4.depth = ABBackground4.depth;
+  ABGuide.depth = ABBackground4.depth + 1;
   if(GrimGroup.isTouching(Abbigail)){
     gameState=END1;
   }
@@ -965,7 +1030,7 @@ if(gameState===BOSSF1){
   Abbigail.velocityY = Abbigail.velocityY + 0.8
   if(keyDown("space")&& Abbigail.y >= 300) {
     Abbigail.velocityY = -15;
- 
+    JumpS.play();
   }
    text("Enderman Health : " + Health1 , 1000,30);
   Enderman.visible=true;
@@ -1041,6 +1106,7 @@ if(gameState===END1){
   Gameover.depth = Gameover.depth;
   Restart1.depth = Gameover.depth + 1;
  Score=0;
+ 
  if(mousePressedOver(Restart1)){
    Restart1Fun();
  }
@@ -1048,7 +1114,7 @@ if(gameState===END1){
 
 if(gameState===5){
   LUST.visible=false;
-  text("Score: "+ score, 1200,30);
+  text("Score: "+ score, 1150,30);
     NEBackground1.depth = NEBackground1.depth;
   Lucan.depth = NEBackground1.depth + 1;
   NEBackground1.depth = NEBackground1.depth;
@@ -1056,6 +1122,9 @@ if(gameState===5){
   NEBackground1.velocityX=-2;
   NEBackground1.visible=true;
   Next3.visible=false;
+  NEGuide.visible=true;
+  NEBackground1.depth = NEBackground1.depth;
+  NEGuide.depth = NEBackground1.depth + 1;
   if(score>450){
     SwordL.velocityX=-5;
     NEBackground1.depth = NEBackground1.depth;
@@ -1067,6 +1136,10 @@ if(gameState===5){
      CreeperGroup.destroyEach();
      ZombieGroup.destroyEach();
     WitherGroup.destroyEach();
+   }
+
+   if(score>100){
+     NEGuide.visible=false;
    }
   if(Lucan.isTouching(SwordL)){
     SwordL.visible=false;
@@ -1098,6 +1171,7 @@ if(Lucan.isTouching(Ground2)){
   Lucan.velocityY = -15;
   Lucan.changeAnimation("LJ",LucanJ);
   Lucan.scale=0.63;
+  JumpS.play();
  }
 if(Lucan.isTouching(Ground)){
   Lucan.changeAnimation("LUCRun",LucanRun);
@@ -1111,8 +1185,19 @@ if(Lucan.isTouching(Ground)){
    NEBackground2.depth = NEBackground2.depth;
    Ground2.depth = NEBackground2.depth + 1;
 
+   if(score>540){
+    NEGuide.visible=true;
+    NEGuide.addImage(NEG2);
+    NEBackground2.depth = NEBackground2.depth;
+    NEGuide.depth = NEBackground2.depth + 1;
+   }
+
+   if(score<600){
+     NEGuide.visible=false;
+   }
+
    if(score>560){
-     NEBackground1.visible=false;
+      NEBackground1.visible=false;
      NEBackground2.visible=true;
      NEBackground2.depth = NEBackground2.depth;
      Lucan.depth = NEBackground2.depth + 1;
@@ -1166,7 +1251,7 @@ if(Lucan.isTouching(Ground)){
      NEBackground5.x=NEBackground5.width/2;
    }
   }
- if(keyDown("s")|| keyDown("S")){
+ if(keyDown("k")|| keyDown("K")){
    ZombieGroup.destroyEach();
  }
 
@@ -1184,7 +1269,11 @@ if(WitherGroup.isTouching(Lucan)||CreeperGroup.isTouching(Lucan)||ZombieGroup.is
 
     
   if(gameState===BOSSF2){
-  //  ZombieFun();
+ NEGuide.visible=true;
+ NEGuide.addImage(NEG3);
+ NEBackground5.depth = NEBackground5.depth;
+  NEGuide.depth = NEBackground5.depth + 1;
+  
   if(CreeperGroup.isTouching(Lucan)||ZombieGroup.isTouching(Lucan)){
     gameState=END2;
   }
@@ -1206,6 +1295,7 @@ if(WitherGroup.isTouching(Lucan)||CreeperGroup.isTouching(Lucan)||ZombieGroup.is
   Lucan.velocityY = Lucan.velocityY + 0.8;
   if(keyDown("space")&& Lucan.y >= 300) {
     Lucan.velocityY = -15;
+    JumpS.play();
    }
    if(Lucan.x<0 || Lucan.x>1350){
      Lucan.x=100;
@@ -1274,6 +1364,7 @@ Gameover.depth = Gameover.depth;
   ZombieGroup.destroyEach();
   CreeperGroup.destroyEach();
   WitherGroup.destroyEach();
+  
 if(mousePressedOver(Restart2)){
   Restart2Fun();
 }
@@ -1281,7 +1372,11 @@ if(mousePressedOver(Restart2)){
 }
  
 if(gameState===4){
-  text("Score: "+ score, 1200,30);
+  ARGuide.visible=true;
+  ARBackground1.depth = ARBackground1.depth;
+  ARGuide.depth = ARBackground1.depth + 1;
+  
+  text("Score: "+ score, 1150,30);
   ARST.visible=false;
   Next2.visible=false;
   ARBackground1.visible=true;
@@ -1292,10 +1387,12 @@ if(gameState===4){
   Ground.depth = ARBackground1.depth + 1;
   Voltaris1Fun();
   Voltaris2Fun();
-  GrimFun();
+  EnergyBallFun();
 
 
-  
+  if(score>100){
+    ARGuide.visible=false;
+  }
 
   if(score>450){
     SwordT.velocityX=-5;
@@ -1317,6 +1414,18 @@ if(gameState===4){
   Ground2.depth = ARBackground1.depth + 1;
   }
 
+  if(score>540){
+    ARGuide.visible=true;
+    ARGuide.addImage(ARG2);
+    ARBackground2.depth = ARBackground2.depth;
+    ARGuide.depth = ARBackground2.depth + 1;
+    
+  }
+
+if(score<600){
+  ARGuide.visible=false;
+}
+
 if(Thalleous.isTouching(Ground2)){
   Thalleous.changeAnimation("TSR",ThalleousSR);
   Thalleous.scale=0.4;
@@ -1335,6 +1444,7 @@ if(Thalleous.isTouching(Ground2)){
   if(keyDown("space")&& Thalleous.y >= 300) {
     Thalleous.velocityY = -15;
     Thalleous.changeAnimation("TJ",ThalleousJ);
+   JumpS.play();
   }
   if(Thalleous.isTouching(Ground)){
     Thalleous.changeAnimation("ThalleousR",ThalleousRun);
@@ -1404,8 +1514,12 @@ if(Thalleous.isTouching(Ground2)){
      ARBackground5.x=ARBackground5.width/2;
    }
   }
-  if(Voltaris1Group.isTouching(Thalleous)|| Voltaris2Group.isTouching(Thalleous)|| GrimGroup.isTouching(Thalleous)){
+  if(Voltaris1Group.isTouching(Thalleous)|| Voltaris2Group.isTouching(Thalleous)|| EnergyBallGroup.isTouching(Thalleous)){
     gameState=END3;
+  }
+
+  if(keyDown("K")|| keyDown("k") && Voltaris1Group.isTouching(Thalleous)){
+    Voltaris1Group.destroyEach();
   }
   if(score>2000){
     gameState=BOSSF3;
@@ -1434,6 +1548,7 @@ if(gameState===BOSSF3){
  TalkS = TalkS + Math.round(getFrameRate()/60);
  if(keyDown("space")&& Thalleous.y >= 300) {
   Thalleous.velocityY = -15;
+  JumpS.play();
 }
 Thalleous.velocityY = Thalleous.velocityY + 0.8;
  
@@ -1487,14 +1602,17 @@ if(TalkS>270){
 if(TalkS>290){
   Voltaris1Fun();
  Voltaris2Fun();
-
-
-
+ ARGuide.visible=true;
+ ARGuide.addImage(ARG3);
+ ARBackground5.depth = ARBackground5.depth;
+ ARGuide.depth = ARBackground5.depth + 1;
 }
+
 if(TalkS>300){
 if(keyDown("p")|| keyDown("P")){
   Thalleous.changeAnimation("TEA",ThalleousPower);
     EQ.visible=true;
+    ARGuide.addImage(ARG4);
     Voltaris1Group.destroyEach();
   ARBackground5.depth = ARBackground5.depth;
   EQ.depth = ARBackground5.depth + 1; 
@@ -1512,7 +1630,7 @@ if(TalkS>345){
 }
 
 if(TalkS>385){
- 
+ ARGuide.visible=false;
  Tygren.x=500;
  Tygren.y=550;
  Tygren.changeAnimation("TAS",TygrenS);
@@ -1581,7 +1699,8 @@ if(gameState===END3){
   Voltaris2Group.destroyEach();
   Ground.visible=false;
   Ground2.visible=false;
-  GrimGroup.destroyEach();
+  EnergyBallGroup.destroyEach();
+
   if(mousePressedOver(Restart3)){
     Restart3Fun();
   }
@@ -1640,6 +1759,7 @@ function JalkarFun(){
     Jalkar.velocityX=-8;
     Jalkar.scale=0.38;
     Jalkar.lifetime=200;
+  
     JalkarGroup.add(Jalkar);
   }
 }
@@ -1713,6 +1833,7 @@ function Voltaris2Fun(){
     Voltaris2.scale=0.43;
     Voltaris2.lifetime=200;
     Voltaris2Group.add(Voltaris2);
+    
   }
   if(gameState===BOSSF3){
 if(score>200){
@@ -1759,5 +1880,19 @@ CreeperGroup.add(Creeper);
       Creeper.lifetime=200;
       CreeperGroup.add(Creeper);
         }
+  }
+}
+
+function EnergyBallFun(){
+  if(frameCount%400===0){
+var EnergyBall=createSprite(1440,1,1,1);
+EnergyBall.y=Math.round(random(505,575));
+EnergyBall.addAnimation("EnergyBall",EnergyBallAnim);
+EnergyBall.velocityX=-8;
+EnergyBall.lifetime=200;
+EnergyBall.scale=0.13;
+TBCS.play();
+EnergyBallGroup.add(EnergyBall);
+
   }
 }
